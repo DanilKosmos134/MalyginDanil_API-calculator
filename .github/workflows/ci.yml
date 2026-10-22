@@ -14,7 +14,7 @@ jobs:
 
     - name: 2. Проверка кода на уязвимости (Semgrep)
       # Semgrep ищет небезопасные паттерны в коде (main.py)
-      uses: returntocorp/semgrep-action@v1
+      uses: semgrep/semgrep-action@v1
       with:
         config: p/default
 
