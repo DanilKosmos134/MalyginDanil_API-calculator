@@ -1,0 +1,33 @@
+name: CI/CD Pipeline & Security Scan
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  security-and-build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 1. Копируем код из репозитория
+      uses: actions/checkout@v3
+
+    - name: 2. Проверка кода на уязвимости (Semgrep)
+      # Semgrep ищет небезопасные паттерны в коде (main.py)
+      uses: returntocorp/semgrep-action@v1
+      with:
+        config: p/default
+
+    - name: 3. Сборка Docker-образа
+      run: docker build -t calculator-api:${{ github.sha }} .
+
+    - name: 4. Сканирование Docker-образа (Trivy)
+      # Trivy проверяет библиотеки внутри контейнера на известные CVE-уязвимости
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: 'calculator-api:${{ github.sha }}'
+        format: 'table'
+        exit-code: '0' # 0 означает, что пайплайн не упадет с ошибкой, а просто покажет отчет
+        ignore-unfixed: true
+        vuln-type: 'os,library'
+        severity: 'CRITICAL,HIGH'
