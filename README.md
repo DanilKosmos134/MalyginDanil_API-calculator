@@ -19,7 +19,7 @@
 (Примечание: внутри контейнера приложение всегда работает на порту 8000. Я пробросил его на внешний порт 20000, так как порт 8000 у меня на Windows был занят).
 
     ```bash
-    docker run -d -p 8000:20000 --name my-calculator calculator-api:v1
+    docker run -d -p 20000:8000 --name my-calculator calculator-api:v1
 
 3. Открыть в браузере интерактивную документацию Swagger UI:
     http://127.0.0.1:20000/docs
